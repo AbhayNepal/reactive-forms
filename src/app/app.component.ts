@@ -1,14 +1,53 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet,ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'reactive-forms';
+
+  formBuilder:FormBuilder = inject(FormBuilder)
+
+  get userName(){
+    return this.registrationForm.controls.userName;
+  }
+
+loadAPIData() {
+  this.registrationForm.patchValue({
+    userName:'Bruce',
+    address:{
+      city:'city',
+      state:'state',
+      postalCode:'34343'
+    }
+  });
+}
+
+registrationForm= this.formBuilder.group({
+  userName:['',[Validators.required,Validators.minLength(3)]],
+  password:[''],
+  confirmPassword : [''],
+  address: this.formBuilder.group({
+    city:[''],
+    state:[''],
+    postalCode:['']
+  })
+})
+  // registrationForm = new FormGroup({
+  //   userName: new FormControl(''),
+  //   password: new FormControl(''),
+  //   confirmPassword : new FormControl(''),
+  //   address: new FormGroup({
+  //     city:new FormControl(''),
+  //     state: new FormControl(''),
+  //     postalCode:new FormControl('')
+  //   })
+  // });
+
 }
