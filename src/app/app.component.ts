@@ -4,18 +4,29 @@ import { RouterOutlet } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { forbiddenNameValidator } from './shared/username-validator'
 import { passwordValidator } from './shared/password.validator';
+import { HttpClientModule } from '@angular/common/http';
+import { RegistrationService } from './registration.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ReactiveFormsModule],
+  imports: [CommonModule, RouterOutlet, ReactiveFormsModule,HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
+onSubmit() {
+  console.log(this.registrationForm.value)
+  this.registrationService.register(this.registrationForm.value)
+  .subscribe(
+    response=> console.log("success",response),
+    error=> console.log("error",error)
+  )
+}
 
   formBuilder: FormBuilder = inject(FormBuilder)
   registrationForm!: FormGroup;
+  registrationService:RegistrationService = inject(RegistrationService)
 
   get userName() {
     return this.registrationForm.controls?.['userName']
